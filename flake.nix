@@ -27,9 +27,6 @@
           };
           default = self.packages.${system}.waybar;
         }
-        // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
-          proton-drive = pkgs.callPackage ./pkgs/proton-drive.nix { };
-        }
       );
 
       overlays.default =
@@ -45,9 +42,6 @@
           amd-debug-tools = prev.callPackage ./pkgs/amd-debug-tools.nix {
             inherit (prev) amd-debug-tools;
           };
-        }
-        // prev.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "x86_64-linux") {
-          proton-drive = prev.callPackage ./pkgs/proton-drive.nix { };
         };
     };
 }
