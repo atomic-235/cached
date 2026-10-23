@@ -29,7 +29,6 @@
         }
         // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
           proton-drive = pkgs.callPackage ./pkgs/proton-drive.nix { };
-          gittop = pkgs.callPackage ./pkgs/gittop.nix { };
         }
       );
 
@@ -49,7 +48,6 @@
         }
         // prev.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "x86_64-linux") {
           proton-drive = prev.callPackage ./pkgs/proton-drive.nix { };
-          gittop = prev.callPackage ./pkgs/gittop.nix { };
         };
     };
 }
