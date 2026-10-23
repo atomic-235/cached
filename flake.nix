@@ -16,15 +16,23 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          # The overlay is applied so packages that link the patched portal
+          # (the backends below) are built against it, exactly as consumers
+          # evaluate them.
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ self.overlays.default ];
+          };
         in
         {
-          waybar = pkgs.callPackage ./pkgs/waybar.nix { };
-          wl-kbptr = pkgs.callPackage ./pkgs/wl-kbptr.nix { };
-          xdg-desktop-portal = pkgs.callPackage ./pkgs/xdg-desktop-portal.nix { };
-          amd-debug-tools = pkgs.callPackage ./pkgs/amd-debug-tools.nix {
-            inherit (pkgs) amd-debug-tools;
-          };
+          inherit (pkgs)
+            waybar
+            wl-kbptr
+            xdg-desktop-portal
+            xdg-desktop-portal-gtk
+            xdg-desktop-portal-termfilechooser
+            amd-debug-tools
+            ;
           default = self.packages.${system}.waybar;
         }
       );
