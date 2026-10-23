@@ -26,10 +26,15 @@
         }
       );
 
-      overlays.default = final: _prev: {
-        waybar = final.callPackage ./pkgs/waybar.nix { };
-        wl-kbptr = final.callPackage ./pkgs/wl-kbptr.nix { };
-        xdg-desktop-portal = final.callPackage ./pkgs/xdg-desktop-portal.nix { };
-      };
+      overlays.default =
+        final: prev:
+        let
+          inherit (prev) callPackage;
+        in
+        {
+          waybar = callPackage ./pkgs/waybar.nix { };
+          wl-kbptr = callPackage ./pkgs/wl-kbptr.nix { };
+          xdg-desktop-portal = callPackage ./pkgs/xdg-desktop-portal.nix { };
+        };
     };
 }
