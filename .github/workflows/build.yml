@@ -1,0 +1,63 @@
+name: Cache
+
+on:
+  schedule:
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: "Advance the nixpkgs pin before building"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+
+      - uses: cachix/install-nix-action@448cde739abec1eaf0646249e3d25bb8d9bc7702 # v31
+
+      - uses: cachix/cachix-action@ad2ddac53f961de1989924296a1f236fcfbaa4fc # v15
+        with:
+          name: atomic-235
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      # This repo owns the nixpkgs pin; consumers follow it, so a build here is
+      # exactly the derivation they will ask for.
+      - name: Advance the nixpkgs pin
+        if: github.event_name == 'schedule' || inputs.bump
+        run: nix flake update nixpkgs
+
+      - name: Build
+        run: |
+          nix build --no-link .#waybar .#wl-kbptr .#xdg-desktop-portal
+
+      # Push explicitly so the paths are in the cache before the lock is
+      # published to consumers.
+      - name: Push to cache
+        run: |
+          cachix push atomic-235 \
+            "$(nix build --no-link --print-out-paths .#waybar)" \
+            "$(nix build --no-link --print-out-paths .#wl-kbptr)" \
+            "$(nix build --no-link --print-out-paths .#xdg-desktop-portal)"
+
+      - name: Commit the pin
+        if: github.event_name == 'schedule' || inputs.bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add flake.lock
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git commit -m "chore: advance nixpkgs pin"
+          git push origin HEAD:main
