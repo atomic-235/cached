@@ -22,7 +22,14 @@
           waybar = pkgs.callPackage ./pkgs/waybar.nix { };
           wl-kbptr = pkgs.callPackage ./pkgs/wl-kbptr.nix { };
           xdg-desktop-portal = pkgs.callPackage ./pkgs/xdg-desktop-portal.nix { };
+          amd-debug-tools = pkgs.callPackage ./pkgs/amd-debug-tools.nix {
+            inherit (pkgs) amd-debug-tools;
+          };
           default = self.packages.${system}.waybar;
+        }
+        // nixpkgs.lib.optionalAttrs (system == "x86_64-linux") {
+          proton-drive = pkgs.callPackage ./pkgs/proton-drive.nix { };
+          gittop = pkgs.callPackage ./pkgs/gittop.nix { };
         }
       );
 
@@ -36,6 +43,13 @@
           xdg-desktop-portal = prev.callPackage ./pkgs/xdg-desktop-portal.nix {
             inherit (prev) xdg-desktop-portal;
           };
+          amd-debug-tools = prev.callPackage ./pkgs/amd-debug-tools.nix {
+            inherit (prev) amd-debug-tools;
+          };
+        }
+        // prev.lib.optionalAttrs (prev.stdenv.hostPlatform.system == "x86_64-linux") {
+          proton-drive = prev.callPackage ./pkgs/proton-drive.nix { };
+          gittop = prev.callPackage ./pkgs/gittop.nix { };
         };
     };
 }

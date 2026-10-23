@@ -36,16 +36,17 @@ jobs:
 
       - name: Build
         run: |
-          nix build --no-link .#waybar .#wl-kbptr .#xdg-desktop-portal
+          for pkg in waybar wl-kbptr xdg-desktop-portal amd-debug-tools proton-drive gittop; do
+            nix build --no-link ".#$pkg"
+          done
 
       # Push explicitly so the paths are in the cache before the lock is
       # published to consumers.
       - name: Push to cache
         run: |
-          cachix push atomic-235 \
-            "$(nix build --no-link --print-out-paths .#waybar)" \
-            "$(nix build --no-link --print-out-paths .#wl-kbptr)" \
-            "$(nix build --no-link --print-out-paths .#xdg-desktop-portal)"
+          for pkg in waybar wl-kbptr xdg-desktop-portal amd-debug-tools proton-drive gittop; do
+            cachix push atomic-235 "$(nix build --no-link --print-out-paths ".#$pkg")"
+          done
 
       - name: Commit the pin
         if: github.event_name == 'schedule' || inputs.bump
