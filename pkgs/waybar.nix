@@ -1,6 +1,6 @@
-{ pkgs }:
+{ waybar }:
 
-pkgs.waybar.overrideAttrs (old: {
+waybar.overrideAttrs (old: {
   patches = (old.patches or [ ]) ++ [
     ./waybar-lua-dispatch.patch
   ];

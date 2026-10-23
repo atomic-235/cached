@@ -1,6 +1,6 @@
-{ pkgs }:
+{ xdg-desktop-portal }:
 
-pkgs.xdg-desktop-portal.overrideAttrs (old: {
+xdg-desktop-portal.overrideAttrs (old: {
   patches = (old.patches or [ ]) ++ [
     ./xdg-desktop-portal-fix-dead-pid-detection.patch
   ];
