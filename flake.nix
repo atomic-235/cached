@@ -36,6 +36,7 @@
             xdg-desktop-portal
             xdg-desktop-portal-gtk
             xdg-desktop-portal-termfilechooser
+            xdg-desktop-portal-hyprland
             amd-debug-tools
             hyprland
             ;
@@ -56,6 +57,10 @@
           inherit (prev) amd-debug-tools;
         };
         hyprland = prev.callPackage ./pkgs/hyprland.nix { inherit (prev) hyprland; };
+        xdg-desktop-portal-hyprland = prev.callPackage ./pkgs/xdg-desktop-portal-hyprland.nix {
+          inherit (prev) xdg-desktop-portal-hyprland;
+          hyprland = final.hyprland;
+        };
       };
     };
 }

@@ -17,6 +17,7 @@ new `flake.lock`.
 | `xdg-desktop-portal` | `xdg-desktop-portal-fix-dead-pid-detection.patch` |
 | `xdg-desktop-portal-gtk` | built against the patched core portal |
 | `xdg-desktop-portal-termfilechooser` | built against the patched core portal |
+| `xdg-desktop-portal-hyprland` | wrapped with the `programs.hyprland` package (`withUWSM = false`) |
 | `amd-debug-tools` | splits `makeWrapperArgs` so the fixup phase works |
 | `hyprland` | `withUWSM = false`, the `programs.hyprland` default |
 | `xwayland` | `defaultFontPath = /run/current-system/sw/share/X11/fonts`, the `programs.xwayland` default |
