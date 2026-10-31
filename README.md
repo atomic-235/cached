@@ -18,6 +18,12 @@ new `flake.lock`.
 | `xdg-desktop-portal-gtk` | built against the patched core portal |
 | `xdg-desktop-portal-termfilechooser` | built against the patched core portal |
 | `amd-debug-tools` | splits `makeWrapperArgs` so the fixup phase works |
+| `hyprland` | `withUWSM = false`, the `programs.hyprland` default |
+| `xwayland` | `defaultFontPath = /run/current-system/sw/share/X11/fonts`, the `programs.xwayland` default |
+
+`hyprland` is overlaid because consumers pick it up via `pkgs.hyprland`.
+`xwayland` is only exposed as a package: it is a `buildInputs` entry of
+hyprland, so overlaying it globally would change hyprland's derivation too.
 
 The portal backends are included because they have the core portal in
 `buildInputs`; patching the core changes their derivations too, and without them

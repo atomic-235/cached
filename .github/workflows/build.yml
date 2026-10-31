@@ -36,7 +36,7 @@ jobs:
 
       - name: Build
         run: |
-          for pkg in waybar wl-kbptr xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-termfilechooser amd-debug-tools; do
+          for pkg in waybar wl-kbptr xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-termfilechooser amd-debug-tools hyprland xwayland; do
             nix build --no-link ".#$pkg"
           done
 
@@ -44,7 +44,7 @@ jobs:
       # published to consumers.
       - name: Push to cache
         run: |
-          for pkg in waybar wl-kbptr xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-termfilechooser amd-debug-tools; do
+          for pkg in waybar wl-kbptr xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-termfilechooser amd-debug-tools hyprland xwayland; do
             cachix push atomic-235 "$(nix build --no-link --print-out-paths ".#$pkg")"
           done
 

@@ -23,6 +23,11 @@
             inherit system;
             overlays = [ self.overlays.default ];
           };
+          # xwayland deliberately stays out of the overlay: it is a build input
+          # of hyprland, so overriding it globally would change hyprland's
+          # derivation too. NixOS overrides pkgs.xwayland on top instead, so
+          # build that same variant from the base set.
+          base = import nixpkgs { inherit system; };
         in
         {
           inherit (pkgs)
@@ -32,24 +37,25 @@
             xdg-desktop-portal-gtk
             xdg-desktop-portal-termfilechooser
             amd-debug-tools
+            hyprland
             ;
+          xwayland = base.callPackage ./pkgs/xwayland.nix { inherit (base) xwayland; };
           default = self.packages.${system}.waybar;
         }
       );
 
-      overlays.default =
-        final: prev:
-        {
-          # Pass the previous package explicitly: `callPackage` resolves its
-          # arguments from the final set, which would recurse here.
-          waybar = prev.callPackage ./pkgs/waybar.nix { inherit (prev) waybar; };
-          wl-kbptr = prev.callPackage ./pkgs/wl-kbptr.nix { inherit (prev) wl-kbptr; };
-          xdg-desktop-portal = prev.callPackage ./pkgs/xdg-desktop-portal.nix {
-            inherit (prev) xdg-desktop-portal;
-          };
-          amd-debug-tools = prev.callPackage ./pkgs/amd-debug-tools.nix {
-            inherit (prev) amd-debug-tools;
-          };
+      overlays.default = final: prev: {
+        # Pass the previous package explicitly: `callPackage` resolves its
+        # arguments from the final set, which would recurse here.
+        waybar = prev.callPackage ./pkgs/waybar.nix { inherit (prev) waybar; };
+        wl-kbptr = prev.callPackage ./pkgs/wl-kbptr.nix { inherit (prev) wl-kbptr; };
+        xdg-desktop-portal = prev.callPackage ./pkgs/xdg-desktop-portal.nix {
+          inherit (prev) xdg-desktop-portal;
         };
+        amd-debug-tools = prev.callPackage ./pkgs/amd-debug-tools.nix {
+          inherit (prev) amd-debug-tools;
+        };
+        hyprland = prev.callPackage ./pkgs/hyprland.nix { inherit (prev) hyprland; };
+      };
     };
 }
