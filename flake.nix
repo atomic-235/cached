@@ -3,8 +3,13 @@
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+  # Temporary: Brave was dropped from nixpkgs and re-added in PR #584534;
+  # nixos-unstable-small carries it until nixos-unstable catches up. Consumers
+  # follow this input so their brave derivation matches the one built here.
+  inputs.nixpkgs-brave.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+
   outputs =
-    { self, nixpkgs }:
+    { self, nixpkgs, nixpkgs-brave }:
     let
       systems = [
         "x86_64-linux"
@@ -39,7 +44,15 @@
             xdg-desktop-portal-hyprland
             amd-debug-tools
             hyprland
+            # Plain nixpkgs packages that were cache misses at this pin, so
+            # consumers rebuilt them locally.
+            opencode
+            v2raya
+            yazi
+            zathura
+            mpv
             ;
+          brave = nixpkgs-brave.legacyPackages.${system}.brave;
           xwayland = base.callPackage ./pkgs/xwayland.nix { inherit (base) xwayland; };
           default = self.packages.${system}.waybar;
         }
