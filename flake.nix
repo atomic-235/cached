@@ -61,7 +61,6 @@
       overlays.default = final: prev: {
         # Pass the previous package explicitly: `callPackage` resolves its
         # arguments from the final set, which would recurse here.
-        waybar = prev.callPackage ./pkgs/waybar.nix { inherit (prev) waybar; };
         wl-kbptr = prev.callPackage ./pkgs/wl-kbptr.nix { inherit (prev) wl-kbptr; };
         xdg-desktop-portal = prev.callPackage ./pkgs/xdg-desktop-portal.nix {
           inherit (prev) xdg-desktop-portal;

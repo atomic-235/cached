@@ -12,7 +12,6 @@ new `flake.lock`.
 
 | Attribute | Patch |
 |---|---|
-| `waybar` | `waybar-lua-dispatch.patch` |
 | `wl-kbptr` | `wl-kbptr-ignore-layout-group.patch` |
 | `xdg-desktop-portal` | `xdg-desktop-portal-fix-dead-pid-detection.patch` |
 | `xdg-desktop-portal-gtk` | built against the patched core portal |
