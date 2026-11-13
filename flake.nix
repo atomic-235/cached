@@ -51,6 +51,7 @@
             yazi
             zathura
             mpv
+            termusic
             ;
           brave = nixpkgs-brave.legacyPackages.${system}.brave;
           xwayland = base.callPackage ./pkgs/xwayland.nix { inherit (base) xwayland; };
